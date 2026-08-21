@@ -1,0 +1,90 @@
+name: Performance smoke
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: performance-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      POSTGRES_DB: acme_commerce
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: ci-only-postgres-password
+      DATABASE_URL: postgresql://acme:ci-only-postgres-password@localhost:5432/acme_commerce
+      AUTH_SECRET: ci-only-auth-secret-with-more-than-32-characters
+      GRAFANA_ADMIN_PASSWORD: ci-only-grafana-password
+      TEST_PASSWORD: performance-test
+      BASE_URL: http://localhost:3000
+      TEST_ENV: LOCAL
+      RESULT_FILE: results/current/smoke-summary.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: grafana/setup-k6-action@v1
+      - run: npm ci
+      - run: npm run validate
+      - run: docker compose build
+      - run: docker compose up -d
+      - run: node scripts/wait-for-health.js
+      - run: npm run data:seed
+      - name: Verify metrics scrape and dashboard provisioning
+        env:
+          GRAFANA_ADMIN_USER: admin
+        run: npm run observability:validate
+      - name: k6 PR-safe smoke
+        run: npm run perf:smoke
+      - name: Execute shortened performance profile matrix
+        env:
+          CI_SAFE: 'true'
+          CI_RAMP_DURATION: 10s
+          TARGET_VUS: 3
+          TEST_DURATION: 10s
+          MAX_DURATION: 5m
+        run: |
+          RESULT_FILE=results/current/baseline-summary.json npm run perf:baseline
+          RESULT_FILE=results/current/load-summary.json npm run perf:load
+          RESULT_FILE=results/current/stress-summary.json npm run perf:stress
+          RESULT_FILE=results/current/spike-summary.json npm run perf:spike
+          RESULT_FILE=results/current/soak-summary.json npm run perf:soak
+          RESULT_FILE=results/current/scalability-summary.json npm run perf:scalability
+          RESULT_FILE=results/current/capacity-summary.json npm run perf:capacity
+      - name: Reliability recovery and concurrent idempotency
+        env:
+          PAYMENT_STUB_URL: http://localhost:8080
+        run: |
+          RESULT_FILE=results/current/reliability-recovery-summary.json npm run perf:resilience
+          k6 run tests/performance/resilience/idempotency.js
+      - name: Absolute performance gate
+        env:
+          SKIP_REGRESSION: 'true'
+        run: npm run perf:gate
+      - run: npm run perf:report
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-smoke-${{ github.run_id }}
+          path: |
+            results/current/
+            results/reports/
+      - name: Diagnostics
+        if: failure()
+        run: docker compose logs --no-color
+      - if: always()
+        run: docker compose down -v

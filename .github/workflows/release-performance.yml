@@ -1,0 +1,85 @@
+name: Release performance and reliability
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Portfolio-safe workload profile
+        required: true
+        type: choice
+        default: NORMAL_LOAD
+        options: [NORMAL_LOAD, PEAK_LOAD, STRESS]
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      POSTGRES_DB: acme_commerce
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: ci-only-postgres-password
+      DATABASE_URL: postgresql://acme:ci-only-postgres-password@localhost:5432/acme_commerce
+      AUTH_SECRET: ci-only-auth-secret-with-more-than-32-characters
+      GRAFANA_ADMIN_PASSWORD: ci-only-grafana-password
+      TEST_PASSWORD: performance-test
+      BASE_URL: http://localhost:3000
+      PAYMENT_STUB_URL: http://localhost:8080
+      TEST_ENV: LOCAL
+      TARGET_VUS: 30
+      TEST_DURATION: 2m
+      MAX_DURATION: 10m
+      CI_SAFE: 'true'
+      PERF_PROFILE: ${{ inputs.profile }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: grafana/setup-k6-action@v1
+      - uses: actions/cache/restore@v4
+        id: baseline
+        with:
+          path: results/baseline/nightly.json
+          key: nightly-baseline-main-release-${{ github.run_id }}
+          restore-keys: nightly-baseline-main-
+      - run: npm ci
+      - run: npm run validate
+      - run: docker compose up -d --build
+      - run: node scripts/wait-for-health.js && npm run data:seed
+      - name: Release load/stress profile
+        env:
+          RESULT_FILE: results/current/release-load-summary.json
+        run: npm run perf:load
+      - name: Absolute release gate
+        env:
+          RESULT_FILE: results/current/release-load-summary.json
+          SKIP_REGRESSION: 'true'
+        run: npm run perf:gate
+      - name: Regression against last equivalent nightly baseline
+        if: steps.baseline.outputs.cache-hit == 'true'
+        run: npm run perf:regression -- results/current/release-load-summary.json results/baseline/nightly.json
+      - name: Reliability recovery and idempotency
+        env:
+          RESULT_FILE: results/current/reliability-summary.json
+        run: |
+          npm run perf:resilience
+          k6 run tests/performance/resilience/idempotency.js
+      - name: Generate release report
+        env:
+          RESULT_FILE: results/current/release-load-summary.json
+        run: npm run perf:report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-performance-${{ github.run_id }}
+          path: |
+            results/current/
+            results/reports/
+      - if: failure()
+        run: docker compose logs --no-color
+      - if: always()
+        run: docker compose down -v

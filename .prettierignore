@@ -1,0 +1,6 @@
+node_modules
+demo-app/dist
+results/current
+results/reports
+observability/grafana/dashboards
+package-lock.json

@@ -1,0 +1,10 @@
+[
+  {
+    "username": "perf-user-1@acme.test",
+    "purpose": "local smoke test; password supplied through TEST_PASSWORD"
+  },
+  {
+    "username": "perf-user-2@acme.test",
+    "purpose": "local smoke test; password supplied through TEST_PASSWORD"
+  }
+]

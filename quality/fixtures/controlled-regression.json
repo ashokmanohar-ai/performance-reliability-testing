@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "classification": "DEMO_SAMPLE",
+    "scenario": "controlled-gate-failure",
+    "note": "Test fixture: p95 is intentionally 30% slower than demo-baseline.json."
+  },
+  "metrics": {
+    "http_req_duration": {
+      "values": {
+        "p(50)": 120,
+        "p(90)": 350,
+        "p(95)": 442,
+        "p(99)": 700
+      }
+    },
+    "http_req_failed": { "values": { "rate": 0.001 } },
+    "http_reqs": { "values": { "count": 13000, "rate": 215 } },
+    "checks": { "values": { "rate": 0.999 } },
+    "checkout_duration": { "values": { "p(95)": 750 } },
+    "checkout_success_rate": { "values": { "rate": 0.998 } }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "title": "Request rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "targets": [{ "expr": "sum(rate(acme_http_request_duration_seconds_count[1m]))", "legendFormat": "requests/s", "refId": "A" }]
+    },
+    {
+      "title": "API p95 latency",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by (le) (rate(acme_http_request_duration_seconds_bucket[5m])))", "legendFormat": "p95", "refId": "A" }]
+    },
+    {
+      "title": "Server error rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "targets": [{ "expr": "sum(rate(acme_http_errors_total[1m]))", "legendFormat": "5xx/s", "refId": "A" }]
+    },
+    {
+      "title": "Process CPU",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "targets": [{ "expr": "rate(acme_process_cpu_seconds_total[1m])", "legendFormat": "CPU cores", "refId": "A" }]
+    },
+    {
+      "title": "Process memory",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "targets": [{ "expr": "acme_process_resident_memory_bytes", "legendFormat": "RSS", "refId": "A" }]
+    },
+    {
+      "title": "Database connections",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "targets": [{ "expr": "acme_db_connections", "legendFormat": "{{state}}", "refId": "A" }]
+    },
+    {
+      "title": "Database query p95",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by (le, operation) (rate(acme_db_query_duration_seconds_bucket[5m])))", "legendFormat": "{{operation}}", "refId": "A" }]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["performance", "reliability", "acme"],
+  "templating": { "list": [] },
+  "time": { "from": "now-15m", "to": "now" },
+  "timezone": "browser",
+  "title": "Acme Commerce — Performance & Reliability",
+  "uid": "acme-performance",
+  "version": 1
+}
