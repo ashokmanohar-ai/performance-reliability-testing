@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "classification": "DEMO_SAMPLE",
+    "scenario": "documented-baseline-format",
+    "environment": "LOCAL-DEMO",
+    "note": "Illustrative data used only to demonstrate comparison. Replace with a measured, environment-matched baseline."
+  },
+  "metrics": {
+    "http_req_duration": {
+      "values": {
+        "avg": 145,
+        "min": 20,
+        "med": 110,
+        "p(50)": 110,
+        "p(90)": 280,
+        "p(95)": 340,
+        "p(99)": 610,
+        "max": 900
+      }
+    },
+    "http_req_failed": { "values": { "rate": 0.001, "passes": 999, "fails": 1 } },
+    "http_reqs": { "values": { "count": 13200, "rate": 220 } },
+    "checks": { "values": { "rate": 0.999, "passes": 13187, "fails": 13 } },
+    "checkout_duration": { "values": { "p(95)": 700 } },
+    "checkout_success_rate": { "values": { "rate": 0.998 } }
+  }
+}

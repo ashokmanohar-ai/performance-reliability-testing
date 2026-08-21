@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: acme-performance-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['demo-app:3000']
+        labels:
+          service: acme-commerce
+          environment: local

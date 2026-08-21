@@ -1,0 +1,14 @@
+node_modules/
+demo-app/dist/
+.env
+.env.*
+!.env.example
+results/current/*
+results/reports/*
+!results/current/.gitkeep
+!results/reports/.gitkeep
+coverage/
+*.log
+.DS_Store
+.idea/
+.vscode/

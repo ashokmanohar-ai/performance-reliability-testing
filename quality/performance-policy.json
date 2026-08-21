@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "api": {
+    "p95Ms": 750,
+    "p99Ms": 1500,
+    "errorRatePercent": 1,
+    "minimumThroughputPerSecond": 1
+  },
+  "checkout": {
+    "p95Ms": 1200,
+    "successRatePercent": 99
+  },
+  "regression": {
+    "maxP95RegressionPercent": 10,
+    "maxErrorRateIncreasePercentagePoints": 0.5,
+    "minThroughputRatio": 0.9
+  },
+  "reliability": {
+    "maximumRecoverySeconds": 30,
+    "duplicateTransactions": 0,
+    "dataCorruptionEvents": 0
+  }
+}

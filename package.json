@@ -1,0 +1,52 @@
+{
+  "name": "performance-reliability-testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-style performance and reliability engineering reference framework",
+  "type": "module",
+  "workspaces": [
+    "demo-app"
+  ],
+  "engines": {
+    "node": ">=22 <25"
+  },
+  "scripts": {
+    "build": "npm run build --workspace demo-app",
+    "dev": "npm run dev --workspace demo-app",
+    "start": "npm run start --workspace demo-app",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run typecheck --workspace demo-app",
+    "test": "npm run test --workspace demo-app && node --test quality/*.test.js",
+    "data:seed": "node scripts/seed-data.js",
+    "data:reset": "node scripts/reset-data.js",
+    "env:validate": "node scripts/validate-environment.js",
+    "perf:smoke": "k6 run tests/performance/smoke/api-smoke.js",
+    "perf:baseline": "k6 run tests/performance/baseline/user-journey-baseline.js",
+    "perf:load": "k6 run tests/performance/load/commerce-load.js",
+    "perf:stress": "k6 run tests/performance/stress/api-stress.js",
+    "perf:spike": "k6 run tests/performance/spike/traffic-spike.js",
+    "perf:soak": "k6 run tests/performance/soak/endurance.js",
+    "perf:scalability": "k6 run tests/performance/scalability/step-load.js",
+    "perf:capacity": "k6 run tests/performance/capacity/arrival-rate.js",
+    "perf:resilience": "k6 run tests/performance/resilience/recovery.js",
+    "perf:gate": "node quality/performance-gate.js",
+    "perf:regression": "node quality/regression-detector.js",
+    "perf:report": "node quality/report-generator.js",
+    "perf:compare": "node scripts/compare-results.js",
+    "validate": "npm run lint && npm run typecheck && npm test && npm run build && npm run env:validate"
+  },
+  "dependencies": {
+    "dotenv": "17.4.2",
+    "pg": "8.23.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.1",
+    "globals": "17.11.0",
+    "prettier": "3.9.6",
+    "typescript-eslint": "8.67.0"
+  },
+  "license": "MIT"
+}
