@@ -1,6 +1,6 @@
 import { check, sleep } from 'k6';
 import { environment } from '../../../framework/config/environments.js';
-import { resilienceThresholds } from '../../../framework/config/thresholds.js';
+import { resilienceThresholds, summaryTrendStats } from '../../../framework/config/thresholds.js';
 import { recoveryTime } from '../../../framework/metrics/custom-metrics.js';
 import { pay } from '../../../framework/clients/payment-client.js';
 import { checkout, ensureToken } from '../../../framework/scenarios/commerce-journey.js';
@@ -9,6 +9,7 @@ import { summaryHandler } from '../../../framework/utils/summary.js';
 
 const config = environment();
 export const options = {
+  summaryTrendStats,
   scenarios: { recovery: { executor: 'per-vu-iterations', vus: 1, iterations: 1 } },
   thresholds: resilienceThresholds
 };

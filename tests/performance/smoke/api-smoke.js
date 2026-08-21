@@ -4,7 +4,7 @@ import { login } from '../../../framework/clients/auth-client.js';
 import { listProducts } from '../../../framework/clients/product-client.js';
 import { environment } from '../../../framework/config/environments.js';
 import { assertSafeExecution } from '../../../framework/config/safety.js';
-import { standardThresholds } from '../../../framework/config/thresholds.js';
+import { standardThresholds, summaryTrendStats } from '../../../framework/config/thresholds.js';
 import { workloadProfile } from '../../../framework/config/workload-models.js';
 import { userForVu } from '../../../framework/data/generators.js';
 import { summaryHandler } from '../../../framework/utils/summary.js';
@@ -14,6 +14,7 @@ const profile = workloadProfile('SMOKE');
 assertSafeExecution(config.baseUrl, 'SMOKE', profile);
 
 export const options = {
+  summaryTrendStats,
   scenarios: {
     api_smoke: { ...profile, exec: 'apiSmoke' },
     authentication_smoke: {

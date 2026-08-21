@@ -15,3 +15,5 @@ export const resilienceThresholds = {
   checks: ['rate>0.98'],
   recovery_time_ms: ['p(95)<30000']
 };
+
+export const summaryTrendStats = ['avg', 'min', 'med', 'p(50)', 'p(90)', 'p(95)', 'p(99)', 'max'];

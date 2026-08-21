@@ -1,6 +1,6 @@
 import { environment } from '../../../framework/config/environments.js';
 import { assertSafeExecution } from '../../../framework/config/safety.js';
-import { commerceThresholds } from '../../../framework/config/thresholds.js';
+import { commerceThresholds, summaryTrendStats } from '../../../framework/config/thresholds.js';
 import { workloadProfile } from '../../../framework/config/workload-models.js';
 import { browse, checkout } from '../../../framework/scenarios/commerce-journey.js';
 import { summaryHandler } from '../../../framework/utils/summary.js';
@@ -10,6 +10,7 @@ const profile = workloadProfile('BASELINE');
 assertSafeExecution(config.baseUrl, 'BASELINE', profile);
 
 export const options = {
+  summaryTrendStats,
   scenarios: {
     baseline_browse: {
       ...profile,

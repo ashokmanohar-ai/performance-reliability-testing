@@ -1,7 +1,7 @@
 import { login } from '../../../framework/clients/auth-client.js';
 import { environment } from '../../../framework/config/environments.js';
 import { assertSafeExecution } from '../../../framework/config/safety.js';
-import { commerceThresholds } from '../../../framework/config/thresholds.js';
+import { commerceThresholds, summaryTrendStats } from '../../../framework/config/thresholds.js';
 import { workloadProfile } from '../../../framework/config/workload-models.js';
 import { userForVu } from '../../../framework/data/generators.js';
 import { executeBusinessMix } from '../../../framework/scenarios/business-mix.js';
@@ -12,6 +12,7 @@ const profile = workloadProfile(__ENV.PERF_PROFILE || 'NORMAL_LOAD');
 assertSafeExecution(config.baseUrl, __ENV.PERF_PROFILE || 'NORMAL_LOAD', profile);
 
 export const options = {
+  summaryTrendStats,
   scenarios: {
     commerce_mix: { ...profile, exec: 'commerceMix' },
     authentication_load: {
