@@ -40,8 +40,18 @@ jobs:
       - run: docker compose up -d
       - run: node scripts/wait-for-health.js
       - run: npm run data:seed
+      - name: Verify metrics scrape and dashboard provisioning
+        env:
+          GRAFANA_ADMIN_USER: admin
+        run: npm run observability:validate
       - name: k6 PR-safe smoke
         run: npm run perf:smoke
+      - name: Reliability recovery and concurrent idempotency
+        env:
+          PAYMENT_STUB_URL: http://localhost:8080
+        run: |
+          RESULT_FILE=results/current/reliability-recovery-summary.json npm run perf:resilience
+          k6 run tests/performance/resilience/idempotency.js
       - name: Absolute performance gate
         env:
           SKIP_REGRESSION: 'true'

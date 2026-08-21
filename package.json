@@ -22,6 +22,7 @@
     "data:seed": "node scripts/seed-data.js",
     "data:reset": "node scripts/reset-data.js",
     "env:validate": "node scripts/validate-environment.js",
+    "observability:validate": "node scripts/validate-observability.js",
     "perf:smoke": "k6 run tests/performance/smoke/api-smoke.js",
     "perf:baseline": "k6 run tests/performance/baseline/user-journey-baseline.js",
     "perf:load": "k6 run tests/performance/load/commerce-load.js",

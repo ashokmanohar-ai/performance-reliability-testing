@@ -33,7 +33,7 @@ export default function () {
   const responses = http.batch([request, request, request, request, request]);
   const paymentIds = new Set(responses.map((response) => response.json('id')).filter(Boolean));
   const duplicates = Math.max(0, paymentIds.size - 1);
-  if (duplicates) duplicateTransactions.add(duplicates);
+  duplicateTransactions.add(duplicates);
   check(responses, {
     'all concurrent responses are controlled': (values) =>
       values.every((value) => [200, 201].includes(value.status)),
