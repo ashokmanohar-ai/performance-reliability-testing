@@ -5,6 +5,7 @@ import { commerceThresholds, summaryTrendStats } from '../../../framework/config
 import { workloadProfile } from '../../../framework/config/workload-models.js';
 import { userForVu } from '../../../framework/data/generators.js';
 import { executeBusinessMix } from '../../../framework/scenarios/business-mix.js';
+import { checkout } from '../../../framework/scenarios/commerce-journey.js';
 import { summaryHandler } from '../../../framework/utils/summary.js';
 
 const config = environment();
@@ -15,6 +16,12 @@ export const options = {
   summaryTrendStats,
   scenarios: {
     commerce_mix: { ...profile, exec: 'commerceMix' },
+    checkout_probe: {
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: 1,
+      exec: 'checkoutProbe'
+    },
     authentication_load: {
       executor: 'constant-arrival-rate',
       rate: Number(__ENV.AUTH_RATE || 2),
@@ -30,6 +37,10 @@ export const options = {
 
 export function commerceMix() {
   executeBusinessMix(config);
+}
+
+export function checkoutProbe() {
+  checkout(config);
 }
 
 export function authenticationLoad() {

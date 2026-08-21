@@ -79,19 +79,20 @@ export function workloadProfile(name) {
   if (__ENV.TEST_DURATION && 'duration' in profile) profile.duration = __ENV.TEST_DURATION;
   if (__ENV.CI_SAFE === 'true' && profile.stages) {
     const target = Math.min(Number(__ENV.TARGET_VUS || 20), 50);
+    const rampDuration = __ENV.CI_RAMP_DURATION || '10s';
     if (profile.executor === 'ramping-arrival-rate') {
       profile.stages = [
-        { duration: '30s', target: Math.min(target, 20) },
+        { duration: rampDuration, target: Math.min(target, 20) },
         { duration: __ENV.TEST_DURATION || '1m', target },
-        { duration: '30s', target: 0 }
+        { duration: rampDuration, target: 0 }
       ];
       profile.preAllocatedVUs = Math.min(profile.preAllocatedVUs, 20);
       profile.maxVUs = Math.min(profile.maxVUs, 50);
     } else {
       profile.stages = [
-        { duration: '30s', target },
+        { duration: rampDuration, target },
         { duration: __ENV.TEST_DURATION || '1m', target },
-        { duration: '30s', target: 0 }
+        { duration: rampDuration, target: 0 }
       ];
     }
   }

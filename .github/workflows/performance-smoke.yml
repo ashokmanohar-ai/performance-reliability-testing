@@ -46,6 +46,21 @@ jobs:
         run: npm run observability:validate
       - name: k6 PR-safe smoke
         run: npm run perf:smoke
+      - name: Execute shortened performance profile matrix
+        env:
+          CI_SAFE: 'true'
+          CI_RAMP_DURATION: 10s
+          TARGET_VUS: 3
+          TEST_DURATION: 10s
+          MAX_DURATION: 5m
+        run: |
+          RESULT_FILE=results/current/baseline-summary.json npm run perf:baseline
+          RESULT_FILE=results/current/load-summary.json npm run perf:load
+          RESULT_FILE=results/current/stress-summary.json npm run perf:stress
+          RESULT_FILE=results/current/spike-summary.json npm run perf:spike
+          RESULT_FILE=results/current/soak-summary.json npm run perf:soak
+          RESULT_FILE=results/current/scalability-summary.json npm run perf:scalability
+          RESULT_FILE=results/current/capacity-summary.json npm run perf:capacity
       - name: Reliability recovery and concurrent idempotency
         env:
           PAYMENT_STUB_URL: http://localhost:8080
