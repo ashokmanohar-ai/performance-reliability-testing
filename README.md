@@ -13,6 +13,19 @@ This is an engineering framework, not a collection of load scripts. It turns an 
 workload model into repeatable tests, correlates client and service telemetry, compares equivalent
 runs, and exits non-zero when measurable release criteria fail.
 
+## Recruiter quick tour
+
+> **60-second decision:** this repository demonstrates performance engineering as a release-control system—not a folder of load scripts.
+
+| Recruiter signal | Evidence in this repository |
+| --- | --- |
+| Workload breadth | Smoke, baseline, load, stress, spike, soak, scalability, capacity, and resilience scenarios |
+| Production thinking | Explicit SLOs, percentile analysis, safe workload controls, regression detection, and release decisions |
+| System depth | k6 + TypeScript, inspectable API target, PostgreSQL, WireMock fault injection, Prometheus, Grafana, Docker, and CI |
+| Interview path | [Architecture](docs/architecture.md) → [results analysis](docs/results-analysis.md) → [2- and 5-minute walkthrough](docs/interview-walkthrough.md) |
+
+**Five-minute proof:** start the documented Docker environment, run `npm run perf:smoke`, and inspect the k6 summary plus the evidence-based quality-gate decision.
+
 ## Business problem
 
 A functional `200 OK` does not prove that a service will meet customer expectations at peak traffic,
