@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use or reference this work, please cite it using the metadata below."
+title: "Performance and Reliability Engineering for AI Applications and AI Agents: Latency, Throughput, Cost, Resilience and SLOs for Production AI Systems"
+type: article
+authors:
+  - family-names: Manohar
+    given-names: Ashok Kumar
+version: 1.0.0
+date-released: 2026-09-05
+url: "https://github.com/ashokmanohar-ai/performance-reliability-testing/blob/main/WHITEPAPER.md"
+repository-code: "https://github.com/ashokmanohar-ai/performance-reliability-testing"
+license: MIT
+keywords:
+  - AI Performance Engineering
+  - Reliability Engineering
+  - Performance Testing
+  - Agentic AI
+  - AI Agents
+  - LLM Performance
+  - RAG Performance
+  - Time to First Token
+  - TTFT
+  - TPOT
+  - Latency
+  - Throughput
+  - Resilience Testing
+  - SLO
+  - Cost Engineering
+  - k6
+  - MLPerf
+  - Quality Engineering
+  - AI Quality Engineering
+  - CI/CD
+abstract: >-
+  An evidence-driven Quality Engineering framework for performance and
+  reliability testing of AI applications and AI agents. The work covers
+  realistic AI workload modeling, SLOs, percentile latency, TTFT, TPOT,
+  end-to-end task latency, throughput, context growth, RAG and agentic
+  trajectories, tokens and cost per successful task, concurrency, queueing,
+  fault injection, timeouts, retries, idempotency, fallback, recovery,
+  observability, baseline regression, CI/CD quality gates and safe capacity
+  testing.
